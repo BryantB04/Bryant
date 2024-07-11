@@ -1,1 +1,1 @@
-Word Puzle
+Word Search
