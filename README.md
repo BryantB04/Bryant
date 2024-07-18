@@ -32,7 +32,4 @@ Currently, the game does not have an interactive way to highlight words directly
 Instead, you would manually update the game code to highlight words if you want to track them.
 Progressing Through Levels:
 
-The current game setup doesn't automatically progress through levels. You can manually increment the current_level variable and call generate_level() to get a new grid and word list.
-Exiting the Game:
-
 To quit the game, close the game window or press the close button on the window.
