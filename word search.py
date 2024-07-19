@@ -7,12 +7,13 @@ pygame.init()
 
 # Define constants
 SCREEN_WIDTH = 400
-SCREEN_HEIGHT = 400
+SCREEN_HEIGHT = 450  # Increase height to make room for the word list at the top
 GRID_SIZE = 10
 CELL_SIZE = SCREEN_WIDTH // GRID_SIZE
 WORD_LIST = ["monkey", "airplane", "school", "internet", "ostrich", "eel", "fish", "burger", "bear"]
 LEVELS = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
 current_level = 0
+TOP_MARGIN = 100  # Space at the top for the word list and level
 
 # Colors
 WHITE = (255, 255, 255)
@@ -67,30 +68,53 @@ def generate_level():
 
 # Highlight the found words in yellow
 def highlight_word(word, grid):
+    directions = [(1, 0), (0, 1), (1, 1)]
     for y in range(GRID_SIZE):
         for x in range(GRID_SIZE):
-            if grid[y][x] == word:
-                pygame.draw.rect(screen, YELLOW, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-                text_surface = word_font.render(word, True, WHITE)
-                screen.blit(text_surface, (x * CELL_SIZE + 5, y * CELL_SIZE + 5))
+            for direction in directions:
+                dx, dy = direction
+                fits = True
+                for i in range(len(word)):
+                    if not (0 <= x + dx * i < GRID_SIZE and 0 <= y + dy * i < GRID_SIZE):
+                        fits = False
+                        break
+                    if grid[y + dy * i][x + dx * i] != word[i]:
+                        fits = False
+                        break
+                if fits:
+                    for i in range(len(word)):
+                        pygame.draw.rect(screen, YELLOW, ((x + dx * i) * CELL_SIZE, TOP_MARGIN + (y + dy * i) * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+                        text_surface = word_font.render(word[i], True, BLACK)
+                        screen.blit(text_surface, ((x + dx * i) * CELL_SIZE + 5, TOP_MARGIN + (y + dy * i) * CELL_SIZE + 5))
 
 # Main game loop
 grid, words = generate_level()
+found_words = set()
+input_text = ''
 running = True
 while running:
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                if input_text in words and input_text not in found_words:
+                    found_words.add(input_text)
+                input_text = ''
+            elif event.key == pygame.K_BACKSPACE:
+                input_text = input_text[:-1]
+            else:
+                input_text += event.unicode
 
     # Draw the grid and words
     screen.fill(WHITE)
     for y in range(GRID_SIZE):
         for x in range(GRID_SIZE):
-            pygame.draw.rect(screen, BLACK, (x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
+            pygame.draw.rect(screen, BLACK, (x * CELL_SIZE, TOP_MARGIN + y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
             cell_content = grid[y][x]
             text_surface = font.render(cell_content, True, BLACK)
-            screen.blit(text_surface, (x * CELL_SIZE + 15, y * CELL_SIZE + 5))
+            screen.blit(text_surface, (x * CELL_SIZE + 15, TOP_MARGIN + y * CELL_SIZE + 5))
 
     # Display the words to find at the top
     level_text = font.render(LEVELS[current_level], True, BLACK)
@@ -99,8 +123,12 @@ while running:
     words_to_find_rendered = font.render(words_to_find_text, True, BLACK)
     screen.blit(words_to_find_rendered, (10, 40))
 
+    # Display the input text
+    input_text_rendered = font.render(input_text, True, BLACK)
+    screen.blit(input_text_rendered, (10, 70))
+
     # Highlight found words
-    for word in words:
+    for word in found_words:
         highlight_word(word, grid)
 
     # Update the display
@@ -108,4 +136,5 @@ while running:
 
 # Quit pygame
 pygame.quit()
+
 
