@@ -33,3 +33,5 @@ Instead, you would manually update the game code to highlight words if you want 
 Progressing Through Levels:
 
 To quit the game, close the game window or press the close button on the window.
+
+Where I got the code reference from: https://medium.com/@sessioncodest/build-a-word-search-puzzle-game-in-python-1377a4dc2233
