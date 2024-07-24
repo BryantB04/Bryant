@@ -19,6 +19,7 @@ TOP_MARGIN = 100  # Space at the top for the word list and level
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
 
 # Set up the screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -101,7 +102,7 @@ def main():
     global current_level
     grid, words = generate_level()
     found_words = set()
-    input_text = ''
+    selected_cells = []
     running = True
     show_start_screen = True
 
@@ -120,15 +121,22 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    if input_text in words and input_text not in found_words:
-                        found_words.add(input_text)
-                    input_text = ''
-                elif event.key == pygame.K_BACKSPACE:
-                    input_text = input_text[:-1]
-                else:
-                    input_text += event.unicode
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x, mouse_y = event.pos
+                if mouse_y >= TOP_MARGIN:
+                    cell_x = mouse_x // CELL_SIZE
+                    cell_y = (mouse_y - TOP_MARGIN) // CELL_SIZE
+                    if (cell_x, cell_y) not in selected_cells:
+                        selected_cells.append((cell_x, cell_y))
+                    else:
+                        selected_cells.remove((cell_x, cell_y))
+
+        # Check if selected cells form a word
+        if selected_cells:
+            selected_word = ''.join([grid[y][x] for x, y in selected_cells])
+            if selected_word in words and selected_word not in found_words:
+                found_words.add(selected_word)
+                selected_cells = []
 
         # Draw the grid and words
         screen.fill(WHITE)
@@ -146,13 +154,13 @@ def main():
         words_to_find_rendered = font.render(words_to_find_text, True, BLACK)
         screen.blit(words_to_find_rendered, (10, 40))
 
-        # Display the input text
-        input_text_rendered = font.render(input_text, True, BLACK)
-        screen.blit(input_text_rendered, (10, 70))
-
         # Highlight found words
         for word in found_words:
             highlight_word(word, grid)
+
+        # Highlight selected cells in red
+        for cell_x, cell_y in selected_cells:
+            pygame.draw.rect(screen, RED, (cell_x * CELL_SIZE, TOP_MARGIN + cell_y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 3)
 
         # Update the display
         pygame.display.flip()
