@@ -14,6 +14,7 @@ Pygame 2.0 or higher
 
 Instructions to Play the Word Search Game
 Starting the Game:
+Press enter to start the game
 
 Run the script to launch the game window.
 Understanding the Interface:
