@@ -2,8 +2,9 @@ import pygame
 import random
 import string
 
-# Initialize pygame
+# Initialize pygame and mixer
 pygame.init()
+pygame.mixer.init()
 
 # Define constants
 SCREEN_WIDTH = 400
@@ -28,6 +29,10 @@ pygame.display.set_caption("Word Search Game")
 # Fonts
 font = pygame.font.Font(None, 30)
 word_font = pygame.font.Font(None, 24)
+
+# Load background music
+pygame.mixer.music.load('background music.mp3')  
+pygame.mixer.music.play(-1)  # Play the music in a loop
 
 # Generate random grid and words for the level
 def generate_level():
@@ -183,3 +188,4 @@ def main():
 
 # Start the game
 main()
+
