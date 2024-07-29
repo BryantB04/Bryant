@@ -7,7 +7,7 @@ pygame.init()
 pygame.mixer.init()
 
 # Define constants
-SCREEN_WIDTH = 400
+SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 450  # Increase height to make room for the word list at the top
 GRID_SIZE = 10
 CELL_SIZE = SCREEN_WIDTH // GRID_SIZE
@@ -31,7 +31,7 @@ font = pygame.font.Font(None, 30)
 word_font = pygame.font.Font(None, 24)
 
 # Load background music
-pygame.mixer.music.load('background music.mp3')  
+pygame.mixer.music.load('background music.mp3')
 pygame.mixer.music.play(-1)  # Play the music in a loop
 
 # Load sound effects
@@ -104,10 +104,40 @@ def highlight_word(word, grid):
 def display_start_screen():
     screen.fill(WHITE)
     title_text = font.render("Word Search Game", True, BLACK)
+    instructions = [
+        "Instructions:",
+        "1. Find all the hidden words in the grid.",
+        "2. Click on the letters to select a word.",
+        "3. Words can be horizontal, vertical, or diagonal.",
+        "4. Press 'ENTER' to start the game."
+    ]
     start_text = font.render("Press ENTER to Start", True, BLACK)
-    screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 2 - 30))
-    screen.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT // 2 + 10))
+    
+    screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, 50))
+    for i, line in enumerate(instructions):
+        instruction_text = font.render(line, True, BLACK)
+        screen.blit(instruction_text, (20, 100 + i * 30))
+    screen.blit(start_text, (SCREEN_WIDTH // 2 - start_text.get_width() // 2, SCREEN_HEIGHT - 50))
+    
     pygame.display.flip()
+
+# Wrap words to fit within the screen width
+def wrap_words(words):
+    wrapped_lines = []
+    line = ""
+    max_line_width = SCREEN_WIDTH - 20  # Allow for padding
+
+    for word in words:
+        if font.size(line + word + ", ")[0] > max_line_width:
+            wrapped_lines.append(line.strip())
+            line = word + ", "
+        else:
+            line += word + ", "
+    
+    if line:
+        wrapped_lines.append(line.strip())
+
+    return wrapped_lines
 
 # Main game loop
 def main():
@@ -165,22 +195,12 @@ def main():
         level_text = font.render(LEVELS[current_level], True, BLACK)
         screen.blit(level_text, (10, 10))
 
+        wrapped_words = wrap_words(words)
         y_offset = 40
-        max_line_width = SCREEN_WIDTH - 20  # Allow for padding
-        line = ""
-        for i, word in enumerate(words):
-            if i == len(words) - 1:
-                line += word
-            elif font.size(line + word + ", ")[0] > max_line_width:
-                words_to_find_rendered = font.render(line, True, BLACK)
-                screen.blit(words_to_find_rendered, (10, y_offset))
-                y_offset += 30
-                line = word + ", "
-            else:
-                line += word + ", "
-        if line:  # Render the last line if any
+        for line in wrapped_words:
             words_to_find_rendered = font.render(line, True, BLACK)
             screen.blit(words_to_find_rendered, (10, y_offset))
+            y_offset += 30
 
         # Highlight found words
         for word in found_words:
@@ -197,6 +217,4 @@ def main():
 
 # Start the game
 main()
-
-
 
