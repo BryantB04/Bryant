@@ -150,9 +150,21 @@ def main():
         # Display the words to find at the top
         level_text = font.render(LEVELS[current_level], True, BLACK)
         screen.blit(level_text, (10, 10))
-        words_to_find_text = "Find these words: " + ", ".join(words)
-        words_to_find_rendered = font.render(words_to_find_text, True, BLACK)
-        screen.blit(words_to_find_rendered, (10, 40))
+
+        y_offset = 40
+        max_line_width = SCREEN_WIDTH - 20  # Allow for padding
+        line = ""
+        for word in words:
+            if font.size(line + word + ", ")[0] > max_line_width:
+                words_to_find_rendered = font.render(line, True, BLACK)
+                screen.blit(words_to_find_rendered, (10, y_offset))
+                y_offset += 30
+                line = word + ", "
+            else:
+                line += word + ", "
+        if line:  # Render the last line if any
+            words_to_find_rendered = font.render(line, True, BLACK)
+            screen.blit(words_to_find_rendered, (10, y_offset))
 
         # Highlight found words
         for word in found_words:
@@ -169,4 +181,3 @@ def main():
 
 # Start the game
 main()
-
