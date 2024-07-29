@@ -34,8 +34,9 @@ word_font = pygame.font.Font(None, 24)
 pygame.mixer.music.load('background music.mp3')  
 pygame.mixer.music.play(-1)  # Play the music in a loop
 
-# Load click sound effect
+# Load sound effects
 click_sound = pygame.mixer.Sound('Click - Sound Effect (HD).mp3')  # Ensure this file exists
+highlight_sound = pygame.mixer.Sound('coin.mp3')  # Ensure this file exists
 
 # Generate random grid and words for the level
 def generate_level():
@@ -95,6 +96,9 @@ def highlight_word(word, grid):
                         pygame.draw.rect(screen, YELLOW, ((x + dx * i) * CELL_SIZE, TOP_MARGIN + (y + dy * i) * CELL_SIZE, CELL_SIZE, CELL_SIZE))
                         text_surface = word_font.render(word[i], True, BLACK)
                         screen.blit(text_surface, ((x + dx * i) * CELL_SIZE + 5, TOP_MARGIN + (y + dy * i) * CELL_SIZE + 5))
+                    # Play highlight sound
+                    highlight_sound.play()
+                    return  # Exit after highlighting the first match
 
 # Display the starting screen
 def display_start_screen():
@@ -193,4 +197,5 @@ def main():
 
 # Start the game
 main()
+
 
