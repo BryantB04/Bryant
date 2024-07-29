@@ -154,8 +154,10 @@ def main():
         y_offset = 40
         max_line_width = SCREEN_WIDTH - 20  # Allow for padding
         line = ""
-        for word in words:
-            if font.size(line + word + ", ")[0] > max_line_width:
+        for i, word in enumerate(words):
+            if i == len(words) - 1:
+                line += word
+            elif font.size(line + word + ", ")[0] > max_line_width:
                 words_to_find_rendered = font.render(line, True, BLACK)
                 screen.blit(words_to_find_rendered, (10, y_offset))
                 y_offset += 30
