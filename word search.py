@@ -34,6 +34,9 @@ word_font = pygame.font.Font(None, 24)
 pygame.mixer.music.load('background music.mp3')  
 pygame.mixer.music.play(-1)  # Play the music in a loop
 
+# Load click sound effect
+click_sound = pygame.mixer.Sound('Click - Sound Effect (HD).mp3')  # Ensure this file exists
+
 # Generate random grid and words for the level
 def generate_level():
     grid = [['' for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
@@ -133,6 +136,8 @@ def main():
                     cell_y = (mouse_y - TOP_MARGIN) // CELL_SIZE
                     if (cell_x, cell_y) not in selected_cells:
                         selected_cells.append((cell_x, cell_y))
+                        # Play click sound
+                        click_sound.play()
                     else:
                         selected_cells.remove((cell_x, cell_y))
 
@@ -179,7 +184,7 @@ def main():
 
         # Highlight selected cells in red
         for cell_x, cell_y in selected_cells:
-            pygame.draw.rect(screen, RED, (cell_x * CELL_SIZE, TOP_MARGIN + cell_y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 3)
+            pygame.draw.rect(screen, RED, (cell_x * CELL_SIZE, TOP_MARGIN + cell_y * CELL_SIZE, CELL_SIZE, CELL_SIZE), 3)  
 
         # Update the display
         pygame.display.flip()
