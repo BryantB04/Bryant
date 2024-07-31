@@ -35,8 +35,8 @@ pygame.mixer.music.load('Music/Envici November - Original Instrument.mp3')
 pygame.mixer.music.play(-1)  # Play the music in a loop
 
 # Load sound effects
-click_sound = pygame.mixer.Sound('Click - Sound Effect (HD).mp3')  # Ensure this file exists
-highlight_sound = pygame.mixer.Sound('coin.mp3')  # Ensure this file exists
+click_sound = pygame.mixer.Sound('Music/Click - Sound Effect (HD).mp3')  # Ensure this file exists
+highlight_sound = pygame.mixer.Sound('Music/coin.mp3')  # Ensure this file exists
 
 # Generate random grid and words for the level
 def generate_level():
