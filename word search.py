@@ -31,7 +31,7 @@ font = pygame.font.Font(None, 30)
 word_font = pygame.font.Font(None, 24)
 
 # Load background music
-pygame.mixer.music.load('Envici November - Original Instrument.mp3')
+pygame.mixer.music.load('Music/Envici November - Original Instrument.mp3')
 pygame.mixer.music.play(-1)  # Play the music in a loop
 
 # Load sound effects
@@ -217,5 +217,6 @@ def main():
 
 # Start the game
 main()
+
 
 
